@@ -101,30 +101,38 @@ test.describe('Hall of Squashers', () => {
     { user: user('mordecai', 4), created_at: '2026-11-16T10:00:00Z', pull_request: {} },
   ];
 
-  test('ranks confirmed reporters by finds, then earliest first find, ignoring PRs', async ({ page }) => {
-    await page.route('https://api.github.com/**', (route) => route.fulfill({ json: issues }));
+  test('pins the Dungeon Master, then ranks crawlers and NPCs by finds, ignoring PRs', async ({ page }) => {
+    await page.route('https://api.github.com/**', (route) => route.fulfill({ json: [...issues, ...issues.slice(0, 1), { user: user('donut', 1), created_at: '2026-11-22T10:00:00Z' }] }));
     await page.route('https://avatars.githubusercontent.com/**', (route) => route.fulfill({ status: 204 }));
+    await page.route('https://github.com/*.png*', (route) => route.fulfill({ status: 204 }));
     await page.goto('/hall.html');
     const rows = page.locator('.squasher');
-    await expect(rows).toHaveCount(3);
-    await expect(rows.nth(0)).toContainText('donut');
-    await expect(rows.nth(0)).toContainText('2 bugs squashed');
-    await expect(rows.nth(1)).toContainText('katia');
-    await expect(rows.nth(2)).toContainText('carl');
-    await expect(rows.nth(2)).toContainText('1 bug squashed');
-    await expect(page.getByText('mordecai')).toHaveCount(0);
+    await expect(rows.first()).toContainText('gillersja1');
+    await expect(rows.first()).toContainText('Dungeon Master');
+    // donut has 4 confirmed finds and outranks every NPC.
+    await expect(rows.nth(1)).toContainText('donut');
+    await expect(rows.nth(1)).toContainText('4 bugs squashed');
+    await expect(rows.nth(2)).toContainText('Princess Donut');
+    await expect(rows.nth(2).locator('.npc-tag')).toHaveText('NPC');
+    await expect(rows).toHaveCount(1 + 3 + 4);
+    await expect(page.getByText('mordecai', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('No crawler has been confirmed yet.')).toHaveCount(0);
   });
 
-  test('says so when nobody is confirmed yet', async ({ page }) => {
+  test('with nobody confirmed, NPCs hold the hall and crawlers are invited to beat them', async ({ page }) => {
     await page.route('https://api.github.com/**', (route) => route.fulfill({ json: [] }));
+    await page.route('https://github.com/*.png*', (route) => route.fulfill({ status: 204 }));
     await page.goto('/hall.html');
-    await expect(page.getByText('No confirmed squashers yet.')).toBeVisible();
+    await expect(page.locator('.squasher.npc')).toHaveCount(4);
+    await expect(page.locator('.squasher.master')).toHaveCount(1);
+    await expect(page.getByText('No crawler has been confirmed yet. Beat the NPCs')).toBeVisible();
   });
 
   test('explains when GitHub is unavailable', async ({ page }) => {
     await page.route('https://api.github.com/**', (route) => route.fulfill({ status: 403, json: { message: 'rate limited' } }));
     await page.goto('/hall.html');
     await expect(page.getByText('The hall is closed for cleaning')).toBeVisible();
+    await expect(page.locator('.squasher.master')).toContainText('gillersja1');
   });
 });
 

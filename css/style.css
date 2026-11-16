@@ -122,3 +122,8 @@ fieldset { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px
 .squasher img { border-radius: 50%; }
 .squasher .rank { font-family: var(--mono); font-size: 1.1rem; text-align: center; }
 .squasher .finds { font-family: var(--mono); color: var(--accent); font-size: 0.85rem; }
+
+.squasher.master { border-color: var(--accent); background: rgba(255, 179, 71, 0.08); }
+.squasher.npc { opacity: 0.85; }
+.npc-icon { font-size: 1.5rem; text-align: center; }
+.npc-tag { font-family: var(--mono); font-size: 0.7rem; color: var(--accent-2); border: 1px solid var(--accent-2); border-radius: 4px; padding: 0 5px; vertical-align: middle; }
