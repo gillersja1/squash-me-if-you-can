@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stat Calculator · Squash Me If You Can</title>
+    <meta name="description" content="A bug hunt practice site: a dungeon gear shop with 20 intentional bugs to find and report." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪲</text></svg>" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-page="Stat Calculator">
+    <header class="topbar">
+      <a class="brand" href="index.html">🪲 Squash Me If You Can</a>
+      <nav aria-label="Main">
+        <a href="index.html">Hub</a>
+        <a href="shop.html">Gear Shop</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="stats.html" aria-current="page">Stat Calculator</a>
+        <a href="party.html">Party Sign-up</a>
+      </nav>
+      <div class="top-actions">
+        <a class="cart-link" href="shop.html#cart" aria-label="Cart">🛒 <span data-cart-count>0</span></a>
+        <a class="btn btn-report" data-report href="#">Report a bug</a>
+      </div>
+    </header>
+    <main>
+      <section class="panel">
+        <p class="eyebrow">Level-up screen</p>
+        <h1>Stat Calculator</h1>
+        <p class="lead">You have <strong>10 points</strong> to spend. Every stat starts at 3.</p>
+        <p class="remaining">Points remaining: <strong id="remaining">10</strong></p>
+        <div id="stats" class="stats"></div>
+        <button id="reset" class="btn" type="button">Reset</button>
+        <h2>Derived</h2>
+        <dl id="derived" class="derived"></dl>
+        <p class="muted small">Hit points = 10 + Constitution × 5 · Melee damage = Strength × 2 + Dexterity · Spell power = Intelligence × 3</p>
+      </section>
+    </main>
+    <footer class="footer">A bug hunt practice site. Every bug here is on purpose (we hope). Fan-made and inspired by <em>Dungeon Crawler Carl</em>; not affiliated with its author or publishers.</footer>
+    <script type="module" src="js/stats.js"></script>
+  </body>
+</html>
